@@ -288,9 +288,9 @@ void Simulator::publishRobotPosition() {
 }
 
 void Simulator::publishAgents() {
-  if (SCENE.getAgents().size() < 2) {
+  /*if (SCENE.getAgents().size() < 2) {
     return;
-  }
+  }*/
 
   pedsim_msgs::AgentStates all_status;
   all_status.header = createMsgHeader();
