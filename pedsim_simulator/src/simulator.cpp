@@ -123,6 +123,7 @@ bool Simulator::initializeSimulation() {
 
   double spawn_period;
   nh_.param<double>("spawn_period", spawn_period, 5.0);
+  //TODO togliere i default e aggiungere parametri ros per frame_id e robot_base_frame_id, se non viene passato fai lanciare eccezione
   nh_.param<std::string>("frame_id", frame_id_, "odom");
   nh_.param<std::string>("robot_base_frame_id", robot_base_frame_id_,
       "base_footprint");
