@@ -44,7 +44,8 @@
 
 ScenarioWriter::ScenarioWriter() {
   // initialize values
-  //pedestrian_number = 0;
+  pedestrian_number = 0;
+  count_agents = 0;
   currentAgents = nullptr;
   currentSpawnArea = nullptr;
 }
@@ -62,9 +63,20 @@ bool ScenarioWriter::readFromFile(const QString& filename) {
   // read input
   xmlReader.setDevice(&file);
 
+  // count how many "agent" keywords are present in the scene.xml file (robot agent excluded)
   while (!xmlReader.atEnd()) {
     xmlReader.readNext();
+    countAgent();
+  }
+
+  if (count_agents = 0) ROS_DEBUG("0 agents in the file, please make sure there is at least one");
+
+  // now modify number of agents according to pedestrian_number.
+  int i = 0;
+  while (!xmlReader.atEnd() && i < count_agents) { 
+    xmlReader.readNext();
     modifyData();
+    i++;
   }
 
   // check for errors
@@ -78,6 +90,49 @@ bool ScenarioWriter::readFromFile(const QString& filename) {
   return true;
 }
 
+void ScenarioWriter::countAgent() {
+  
+  if (xmlReader.isStartElement()) {
+    const QString elementName = xmlReader.name().toString();
+    const QXmlStreamAttributes elementAttributes = xmlReader.attributes();
+
+    if ((elementName == "scenario") || (elementName == "welcome")) {
+      // nothing to do
+    } else if (elementName == "obstacle") {
+      // nothing to do
+    } else if (elementName == "waypoint") {
+      // nothing to do
+    } else if (elementName == "queue") {
+      // nothing to do
+    } else if (elementName == "attraction") {
+      // nothing to do
+    } else if (elementName == "agent") {
+      const int type = elementAttributes.value("type").toString().toInt();
+      if (type != 2) count_agents++;  // increment counter only if agent is not of type 2 (i.e robot)
+    } else if (elementName == "source") {
+      // nothing to do
+    } else if (elementName == "addwaypoint") {
+      // nothing to do
+    } else if (elementName == "addqueue") {
+      // nothing to do
+    } else {
+      // inform the user about invalid elements
+      ROS_DEBUG("Unknown element: <%s>", elementName.toStdString().c_str());
+    }
+  } else if (xmlReader.isEndElement()) {
+    const QString elementName = xmlReader.name().toString();
+
+    if (elementName == "agent") {
+      const int type = elementAttributes.value("type").toString().toInt();
+      if (type != 2) count_agents++;
+    }
+  }
+
+}
+
+// The computation adds 1 to each agent keyword (except those of type 2) one at a time until pedestrian_number becomes 0.
+// Example: pedestrian_number = 3, agent keywords = 3, then add 1 to first, add 1 to second, add 1 to third.
+// TODO: SET STREAM WRITER
 void ScenarioWriter::modifyData() {
   if (xmlReader.isStartElement()) {
     const QString elementName = xmlReader.name().toString();
@@ -94,20 +149,14 @@ void ScenarioWriter::modifyData() {
     } else if (elementName == "attraction") {
       // nothing to do
     } else if (elementName == "agent") {
-      const double x = elementAttributes.value("x").toString().toDouble();
-      const double y = elementAttributes.value("y").toString().toDouble();
-      const int n = elementAttributes.value("n").toString().toInt();
-      const double dx = elementAttributes.value("dx").toString().toDouble();
-      const double dy = elementAttributes.value("dy").toString().toDouble();
       const int type = elementAttributes.value("type").toString().toInt();
-      AgentCluster* agentCluster = new AgentCluster(x, y, n);
-      agentCluster->setDistribution(dx, dy);
+      const int n = elementAttributes.value("n").toString().toInt();
+      if (type != 2) {
 
-      /// TODO - change agents Vmax distribution based on agent type
-      /// and other force parameters to realize different behaviours
-      agentCluster->setType(static_cast<Ped::Tagent::AgentType>(type));
-      SCENE.addAgentCluster(agentCluster);
-      currentAgents = agentCluster;
+      }
+      
+
+      
     } else if (elementName == "source") {
       // nothing to do
     } else if (elementName == "addwaypoint") {

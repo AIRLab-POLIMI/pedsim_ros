@@ -35,6 +35,7 @@
 
 #include <QPair>
 #include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 class ScenarioWriter {
   // Constructor and Destructor
@@ -44,14 +45,17 @@ class ScenarioWriter {
   // Methods
  public:
   bool readFromFile(const QString& filename);
-  int pedestrian_number;
+  int pedestrian_number;  // this is the number of pedestrian(=agents) the user wants to have in the simulation
+  int count_agents;       // this is the number of pedestrian(=agents) that are written in the scene.xml file
 
  protected:
   void modifyData();
+  int countAgent();
 
   // Attributes
  private:
   QXmlStreamReader xmlReader;
+  QXmlStreamWriter xmlWriter;
 
   AgentCluster* currentAgents;
   SpawnArea* currentSpawnArea;
