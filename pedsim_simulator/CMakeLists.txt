@@ -47,6 +47,7 @@ set(SOURCES
   	src/config.cpp
   	src/agentstatemachine.cpp
   	src/scenarioreader.cpp
+	src/scenariowriter.cpp
 	src/rng.cpp
 
 	# elements

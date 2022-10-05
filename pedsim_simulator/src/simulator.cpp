@@ -116,6 +116,13 @@ bool Simulator::initializeSimulation() {
   nh_.param<double>("max_robot_speed", CONFIG.max_robot_speed, 1.5);
   nh_.param<double>("update_rate", CONFIG.updateRate, 25.0);
   nh_.param<double>("simulation_factor", CONFIG.simulationFactor, 1.0);
+  nh_.param<int>("pedestrian_number", CONFIG.pedestrian_number, 2);
+
+  // modify scene.xml
+  ScenarioWriter scenario_writer;
+  //scenario_writer.pedestrian_number = CONFIG.pedestrian_number;
+  //scenario_writer.
+
 
   int op_mode = 1;
   nh_.param<int>("robot_mode", op_mode, 1);
