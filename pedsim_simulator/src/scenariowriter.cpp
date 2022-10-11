@@ -123,8 +123,8 @@ void ScenarioWriter::countAgent() {
     const QString elementName = xmlReader.name().toString();
 
     if (elementName == "agent") {
-      const int type = elementAttributes.value("type").toString().toInt();
-      if (type != 2) count_agents++;
+      //const int type = elementAttributes.value("type").toString().toInt();
+      //if (type != 2) count_agents++;
     }
   }
 

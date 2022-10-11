@@ -50,7 +50,7 @@ class ScenarioWriter {
 
  protected:
   void modifyData();
-  int countAgent();
+  void countAgent();
 
   // Attributes
  private:

@@ -64,8 +64,11 @@
 #include <pedsim_simulator/element/obstacle.h>
 #include <pedsim_simulator/element/waitingqueue.h>
 #include <pedsim_simulator/element/waypoint.h>
+
 #include <pedsim_simulator/scenarioreader.h>
 #include <pedsim_simulator/scenariowriter.h>
+#include <pedsim_simulator/xmlmanager.h>
+
 #include <pedsim_simulator/scene.h>
 
 #include <dynamic_reconfigure/server.h>

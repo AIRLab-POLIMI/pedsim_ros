@@ -106,16 +106,28 @@ bool Simulator::initializeSimulation() {
   nh_.param<int>("pedestrian_number", CONFIG.pedestrian_number, 2);
   // load scene file string
   const QString scenefile = QString::fromStdString(scene_file_param);
-  // modify scene.xml
-  ScenarioWriter scenario_writer;
-  scenario_writer.pedestrian_number = CONFIG.pedestrian_number;
-  if (scenario_writer.readFromFile(scenefile) == false) {
-    ROS_ERROR_STREAM(
-        "Could not write the scene file, please check the paths and param "
-        "names : "
-        << scene_file_param);
-    return false;
+
+  XmlManager xml_manager;
+  if (xml_manager.buildTree(scenefile)) {
+    ROS_INFO_STREAM("TREE BUILT CORRECTLY");
+  } 
+  else {
+    ROS_INFO_STREAM("TREE BUILT BADLY");
   }
+  int agents = 0;
+  agents = xml_manager.countAgents();
+  ROS_INFO_STREAM("number of agents in file: " << agents << "\n");
+  //xml_manager.editAgentNumber(CONFIG.pedestrian_number);
+
+  // ScenarioWriter scenario_writer;
+  // scenario_writer.pedestrian_number = CONFIG.pedestrian_number;
+  // if (scenario_writer.readFromFile(scenefile) == false) {
+  //   ROS_ERROR_STREAM(
+  //       "Could not write the scene file, please check the paths and param "
+  //       "names : "
+  //       << scene_file_param);
+  //   return false;
+  // }
   //scenario_writer.
 
   
