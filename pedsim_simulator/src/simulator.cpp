@@ -114,10 +114,9 @@ bool Simulator::initializeSimulation() {
   else {
     ROS_INFO_STREAM("TREE BUILT BADLY");
   }
-  int agents = 0;
-  agents = xml_manager.countAgents();
-  ROS_INFO_STREAM("number of agents in file: " << agents << "\n");
-  //xml_manager.editAgentNumber(CONFIG.pedestrian_number);
+  //std::vector<int> agents = xml_manager.saveAgentsNumber();
+  //ROS_INFO_STREAM("number of agents in file: " << agents << "\n");
+  xml_manager.editAgentNumber(CONFIG.pedestrian_number);
 
   // ScenarioWriter scenario_writer;
   // scenario_writer.pedestrian_number = CONFIG.pedestrian_number;

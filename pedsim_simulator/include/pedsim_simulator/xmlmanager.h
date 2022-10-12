@@ -17,8 +17,8 @@ class XmlManager {
   // Methods
  public:
   bool buildTree(const QString& filename);
-  void editAgentNumber(int n);
-  int countAgents();
+  void editAgentNumber(int pedestrian_number);
+  std::vector<int> saveAgentsNumber();
   QDomDocument document;
   
  protected:

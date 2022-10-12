@@ -57,14 +57,29 @@ bool XmlManager::buildTree(const QString& filename) {
     return true;
 }
 
-void XmlManager::editAgentNumber(int n) {
+// pedestrian_number is the number of peds the user wishes to use
+// agent_number is the number of agent keywords found in the scene.xml file
+void XmlManager::editAgentNumber(int pedestrian_number) {
+    cout << pedestrian_number << '\n';
+    std::vector<int> v = saveAgentsNumber();
+    int size = v.size();
     
+    for(int i=0;  ;i=(i+1)%size) {
+        v[i]++;
+        pedestrian_number--;
+        if (pedestrian_number == 0) break;
+    }
 
+    for(int i=0; i < v.size(); i++) {
+        cout << "[" << v[i] << "] "; 
+    }
+    cout << '\n';
 }
 
-// count how many "agent" keywords are present in the scene.xml file (robot agent, i.e type 2, excluded)
-int XmlManager::countAgents() {
-    int count = 0;
+// look for "agent" keywords in the QDomDocument file and add its occurrences to a vector 
+std::vector<int> XmlManager::saveAgentsNumber() {
+    int n_agent = 0;
+    std::vector<int> vectorAgents;
 
     QDomElement docElem = document.documentElement(); //returns the root of the document
     QDomNode n = docElem.firstChild();  // returns first child of the root
@@ -72,12 +87,17 @@ int XmlManager::countAgents() {
         QDomElement e = n.toElement(); // try to convert the node to an element.
         if(!e.isNull()) {
             if (e.tagName().toStdString() == "agent" && e.attribute("type").toInt() != 2) {
-                //cout << qPrintable(e.attribute("type")) << '\n';
-                count++;
+                n_agent = e.attribute("n").toInt();
+                //cout << n_agent << '\n';
+                vectorAgents.push_back(n_agent);
             }
         }
         n = n.nextSibling();
     }
 
-    return count;
+    for (auto v : vectorAgents)
+        std::cout << "[" << v << "] ";
+    cout << '\n';
+
+    return vectorAgents;
 }
