@@ -21,59 +21,25 @@ bool XmlManager::buildTree(const QString& filename) {
     }
     file.close();
     document = doc;
-    // // print out the element names of all elements that are direct children
-    // // of the outermost element.
-    // QDomElement docElem = doc.documentElement(); //returns the root of the document
-    // cout << qPrintable(docElem.tagName()) << '\n'; // print root
-
-    // QDomNode n = docElem.firstChild();  // returns first child of the root
-    // while(!n.isNull()) {
-    //     QDomElement e = n.toElement(); // try to convert the node to an element.
-    //     if(!e.isNull()) {
-    //         cout << qPrintable(e.tagName()) << '\n'; // the node really is an element.
-    //     }
-    //     n = n.nextSibling();
-    // }
-
-    // // Here we append a new element to the end of the document
-    // QDomElement elem = doc.createElement("img");
-    // elem.setAttribute("src", "myimage.png");
-    // docElem.appendChild(elem);
 
     // print out the element names of all elements that are direct children
     // of the outermost element.
     QDomElement docElem = document.documentElement(); //returns the root of the document
     cout << qPrintable(docElem.tagName()) << '\n'; // print root
-
     QDomNode n = docElem.firstChild();  // returns first child of the root
+
     while(!n.isNull()) {
         QDomElement e = n.toElement(); // try to convert the node to an element.
         if(!e.isNull()) {
-            cout << qPrintable(e.tagName()) << '\n'; // the node really is an element.
+            if (e.tagName().toStdString() == "agent") cout << qPrintable(e.tagName()) << " type: " << qPrintable(e.attribute("type")) << " n: " << qPrintable(e.attribute("n")) << '\n'; 
+            else {
+                //cout << qPrintable(e.tagName()) << '\n'; // the node really is an element.
+            }
         }
         n = n.nextSibling();
     }
 
     return true;
-}
-
-// pedestrian_number is the number of peds the user wishes to use
-// agent_number is the number of agent keywords found in the scene.xml file
-void XmlManager::editAgentNumber(int pedestrian_number) {
-    cout << pedestrian_number << '\n';
-    std::vector<int> v = saveAgentsNumber();
-    int size = v.size();
-    
-    for(int i=0;  ;i=(i+1)%size) {
-        v[i]++;
-        pedestrian_number--;
-        if (pedestrian_number == 0) break;
-    }
-
-    for(int i=0; i < v.size(); i++) {
-        cout << "[" << v[i] << "] "; 
-    }
-    cout << '\n';
 }
 
 // look for "agent" keywords in the QDomDocument file and add its occurrences to a vector 
@@ -101,3 +67,54 @@ std::vector<int> XmlManager::saveAgentsNumber() {
 
     return vectorAgents;
 }
+
+// pedestrian_number is the number of peds the user wishes to use
+// agent_number is the number of agent keywords found in the scene.xml file
+void XmlManager::editAgentNumber(int pedestrian_number) {
+    //cout << pedestrian_number << '\n';
+    std::vector<int> v = saveAgentsNumber();
+    int size = v.size();
+    
+    int temp = pedestrian_number;
+    for(int i=0;  ;i=(i+1)%size) { // here I add 1 to every agent cyclically until I reach the number of pedestrians
+        v[i]++;
+        temp--;
+        if(temp == 0) break;
+    }
+
+    for(int i=0; i < v.size(); i++) {
+        cout << "[" << v[i] << "] "; 
+    }
+    cout << '\n';
+
+    // now add these new values to the QDomDocument document
+
+    QDomElement docElem = document.documentElement(); //returns the root of the document
+    QDomNode n = docElem.firstChild();  // returns first child of the root
+    int j = 0;
+    while(!n.isNull()) {
+        QDomElement e = n.toElement(); 
+        if(!e.isNull()) {
+            if (e.tagName().toStdString() == "agent" && e.attribute("type").toInt() != 2) {
+                e.setAttribute("n", v[j]);
+                j++;
+            }
+        }
+        n = n.nextSibling();
+    }
+
+    // n = docElem.firstChild();  // returns first child of the root
+    // while(!n.isNull()) {
+    //     QDomElement e = n.toElement(); // try to convert the node to an element.
+    //     if(!e.isNull()) {
+    //         if (e.tagName().toStdString() == "agent") cout << qPrintable(e.tagName()) << " type: " << qPrintable(e.attribute("type")) << " n: " << qPrintable(e.attribute("n")) << '\n'; 
+    //         else {
+    //             //cout << qPrintable(e.tagName()) << '\n'; // the node really is an element.
+    //         }
+    //     }
+    //     n = n.nextSibling();
+    // }
+    
+}
+
+

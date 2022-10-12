@@ -103,7 +103,7 @@ bool Simulator::initializeSimulation() {
   ROS_INFO_STREAM("Loading scene [" << scene_file_param << "] for simulation");
 
   // load pedestrian number parameter into CONFIG.pedestrian_number
-  nh_.param<int>("pedestrian_number", CONFIG.pedestrian_number, 2);
+  nh_.param<int>("pedestrian_number", CONFIG.pedestrian_number, 10);
   // load scene file string
   const QString scenefile = QString::fromStdString(scene_file_param);
 
