@@ -10,42 +10,10 @@ XmlManager::XmlManager() {
     //
 }
 
-bool XmlManager::buildTree(const QString& filename) {
-    QDomDocument doc("scene");
-    QFile file(filename);
-    if (!file.open(QIODevice::ReadOnly))
-        return false;
-    if (!doc.setContent(&file)) {   //perform parsing of the document, returns false if parse error occurs
-        file.close();
-        return false;
-    }
-    file.close();
-    document = doc;
-
-    // print out the element names of all elements that are direct children
-    // of the outermost element.
-    QDomElement docElem = document.documentElement(); //returns the root of the document
-    cout << qPrintable(docElem.tagName()) << '\n'; // print root
-    QDomNode n = docElem.firstChild();  // returns first child of the root
-
-    while(!n.isNull()) {
-        QDomElement e = n.toElement(); // try to convert the node to an element.
-        if(!e.isNull()) {
-            if (e.tagName().toStdString() == "agent") cout << qPrintable(e.tagName()) << " type: " << qPrintable(e.attribute("type")) << " n: " << qPrintable(e.attribute("n")) << '\n'; 
-            else {
-                //cout << qPrintable(e.tagName()) << '\n'; // the node really is an element.
-            }
-        }
-        n = n.nextSibling();
-    }
-
-    return true;
-}
 
 // look for "agent" keywords in the QDomDocument file and add its occurrences to a vector 
-std::vector<int> XmlManager::saveAgentsNumber() {
+int XmlManager::countAgents() {
     int n_agent = 0;
-    std::vector<int> vectorAgents;
 
     QDomElement docElem = document.documentElement(); //returns the root of the document
     QDomNode n = docElem.firstChild();  // returns first child of the root
@@ -53,44 +21,62 @@ std::vector<int> XmlManager::saveAgentsNumber() {
         QDomElement e = n.toElement(); // try to convert the node to an element.
         if(!e.isNull()) {
             if (e.tagName().toStdString() == "agent" && e.attribute("type").toInt() != 2) {
-                n_agent = e.attribute("n").toInt();
-                //cout << n_agent << '\n';
-                vectorAgents.push_back(n_agent);
+                n_agent++;
             }
         }
         n = n.nextSibling();
     }
 
-    for (auto v : vectorAgents)
-        std::cout << "[" << v << "] ";
-    cout << '\n';
-
-    return vectorAgents;
+    return n_agent;
 }
 
 // pedestrian_number is the number of peds the user wishes to use
-// agent_number is the number of agent keywords found in the scene.xml file
-void XmlManager::editAgentNumber(int pedestrian_number) {
-    //cout << pedestrian_number << '\n';
-    std::vector<int> v = saveAgentsNumber();
-    int size = v.size();
+// agents_number is the number of agent keywords found in the scene.xml file
+bool XmlManager::editAgentNumber(const QString& filename, int pedestrian_number) {
+    QDomDocument doc("scene");
+    QFile file(filename);
+    if (!file.open(QIODevice::ReadWrite))
+        return false;
+    if (!doc.setContent(&file)) {   //perform parsing of the document, returns false if parse error occurs
+        file.close();
+        return false;
+    }
+    document = doc;
+
+    // print out the element names of all elements that are direct children
+    // of the outermost element.
+    QDomElement docElem = document.documentElement(); //returns the root of the document
+    //cout << qPrintable(docElem.tagName()) << '\n'; // print root
+    QDomNode n = docElem.firstChild();  // returns first child of the root
+
+    // used for printing the data saved from the xml for debugging
+    /* while(!n.isNull()) {
+        QDomElement e = n.toElement(); // try to convert the node to an element.
+        if(!e.isNull()) {
+            if (e.tagName().toStdString() == "agent") {
+                cout << qPrintable(e.tagName()) << " type: " << qPrintable(e.attribute("type")) << " n: " << qPrintable(e.attribute("n")) << '\n'; 
+            } 
+        }
+        n = n.nextSibling();
+    } */
+
+    int agents_number = countAgents();
+    std::vector<int> v(agents_number, 0); // define a vector of int of length agents_number and fill it with zeros
     
     int temp = pedestrian_number;
-    for(int i=0;  ;i=(i+1)%size) { // here I add 1 to every agent cyclically until I reach the number of pedestrians
+    for(int i=0;  ;i=(i+1)%agents_number) { // here I add 1 to every member of the list cyclically until I reach the number of pedestrians
         v[i]++;
         temp--;
         if(temp == 0) break;
     }
 
-    for(int i=0; i < v.size(); i++) {
+    /* for(int i=0; i < v.size(); i++) {   // print the list for debugging purposes
         cout << "[" << v[i] << "] "; 
     }
-    cout << '\n';
+    cout << '\n'; */
 
     // now add these new values to the QDomDocument document
-
-    QDomElement docElem = document.documentElement(); //returns the root of the document
-    QDomNode n = docElem.firstChild();  // returns first child of the root
+    //n = docElem.firstChild();  // decomment if you also decomment lines 52-60
     int j = 0;
     while(!n.isNull()) {
         QDomElement e = n.toElement(); 
@@ -103,18 +89,13 @@ void XmlManager::editAgentNumber(int pedestrian_number) {
         n = n.nextSibling();
     }
 
-    // n = docElem.firstChild();  // returns first child of the root
-    // while(!n.isNull()) {
-    //     QDomElement e = n.toElement(); // try to convert the node to an element.
-    //     if(!e.isNull()) {
-    //         if (e.tagName().toStdString() == "agent") cout << qPrintable(e.tagName()) << " type: " << qPrintable(e.attribute("type")) << " n: " << qPrintable(e.attribute("n")) << '\n'; 
-    //         else {
-    //             //cout << qPrintable(e.tagName()) << '\n'; // the node really is an element.
-    //         }
-    //     }
-    //     n = n.nextSibling();
-    // }
-    
-}
+    // Write changes to same file
+    file.resize(0);
+    QTextStream stream;
+    stream.setDevice(&file);
+    document.save(stream, 4);
 
+    file.close();
+    return true;
+}
 

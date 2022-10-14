@@ -8,6 +8,8 @@
 #include <QDomDocument>
 #include <QDomElement>
 #include <QDomNode>
+#include <QFile>
+#include <QTextStream>
 
 class XmlManager {
   // Constructor and Destructor
@@ -16,17 +18,13 @@ class XmlManager {
 
   // Methods
  public:
-  bool buildTree(const QString& filename);
-  void editAgentNumber(int pedestrian_number);
-  std::vector<int> saveAgentsNumber();
-  QDomDocument document;
-  
- protected:
-  void processData();
+  bool editAgentNumber(const QString& filename, int pedestrian_number);
+  int countAgents();
 
   // Attributes
- private:
-  
+ public:
+  QDomDocument document;
+
 };
 
 #endif
