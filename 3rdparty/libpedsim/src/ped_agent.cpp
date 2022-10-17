@@ -32,8 +32,8 @@ Ped::Tagent::Tagent() {
   teleop = false;
 
   // assign random maximal speed in m/s
-  normal_distribution<double> distribution(0.6, 0.2);
-  vmax = distribution(generator);
+  //normal_distribution<double> distribution(0.6, 0.2);
+  vmax = 1.6;
   forceFactorDesired = 1.0;
   forceFactorSocial = 2.1;
   forceFactorObstacle = 10.0;
@@ -66,6 +66,8 @@ void Ped::Tagent::removeAgentFromNeighbors(const Ped::Tagent* agentIn) {
 /// \param   pvmax The maximum velocity. In scene units per timestep, multiplied
 /// by the simulation's precision h.
 void Ped::Tagent::setVmax(double pvmax) { vmax = pvmax; }
+
+void Ped::Tagent::setForceSigmaRobot(double vmax) { forceSigmaRobot = 0.3*vmax/0.4;}
 
 /// Sets the agent's position. This, and other getters returning coordinates,
 /// will eventually changed to returning a

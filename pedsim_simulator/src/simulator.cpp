@@ -129,6 +129,7 @@ bool Simulator::initializeSimulation() {
   nh_.param<double>("max_robot_speed", CONFIG.max_robot_speed, 1.5);
   nh_.param<double>("update_rate", CONFIG.updateRate, 25.0);
   nh_.param<double>("simulation_factor", CONFIG.simulationFactor, 1.0);
+  nh_.param<double>("pedestrian_max_vel", CONFIG.pedestrian_max_vel, 0.0);
 
   int op_mode = 1;
   nh_.param<int>("robot_mode", op_mode, 1);
@@ -160,6 +161,9 @@ void Simulator::runSimulation() {
           robot_ = agent;
           last_robot_orientation_ =
               poseFrom2DVelocity(robot_->getvx(), robot_->getvy());
+        } else {
+          agent->setVmax(CONFIG.pedestrian_max_vel);
+          agent->setForceSigmaRobot(CONFIG.pedestrian_max_vel);
         }
       }
     }
