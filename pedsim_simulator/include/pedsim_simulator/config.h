@@ -88,6 +88,7 @@ class Config : public QObject {
   // Simulation
   double updateRate;
   double simulationFactor;
+  int pedestrian_number;
 
   // Forces
   double forceObstacle;

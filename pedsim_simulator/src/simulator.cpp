@@ -102,7 +102,20 @@ bool Simulator::initializeSimulation() {
 
   ROS_INFO_STREAM("Loading scene [" << scene_file_param << "] for simulation");
 
+  // load pedestrian number parameter into CONFIG.pedestrian_number
+  nh_.param<int>("pedestrian_number", CONFIG.pedestrian_number, 3);
+  // load scene file string
   const QString scenefile = QString::fromStdString(scene_file_param);
+
+  XmlManager xml_manager;
+  if (xml_manager.editAgentNumber(scenefile, CONFIG.pedestrian_number)) {
+    ROS_INFO_STREAM("EDIT WAS SUCCESSFUL");
+  } 
+  else {
+    ROS_INFO_STREAM("EDIT WENT WRONG");
+  }
+
+  // Now read the modified file
   ScenarioReader scenario_reader;
   if (scenario_reader.readFromFile(scenefile) == false) {
     ROS_ERROR_STREAM(

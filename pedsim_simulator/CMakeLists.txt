@@ -25,6 +25,7 @@ set(CMAKE_AUTOUIC ON)
 find_package(catkin REQUIRED COMPONENTS ${PEDSIM_SIMULATOR_DEPENDENCIES})
 find_package(Boost REQUIRED)
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Xml REQUIRED)
 
 # dynamic reconfigure parameters
 generate_dynamic_reconfigure_options(config/PedsimSimulator.cfg)
@@ -39,6 +40,8 @@ include_directories(${Eigen_INCLUDE_DIRS})
 include_directories(${catkin_INCLUDE_DIRS})
 include_directories(${Qt5Widgets_INCLUDES})
 add_definitions(${Qt5Widgets_DEFINITIONS})
+include_directories(${Qt5Xml_INCLUDES})
+add_definitions(${Qt5Xml_DEFINITIONS})
 
 set(SOURCES
   	src/simulator_node.cpp
@@ -48,6 +51,7 @@ set(SOURCES
   	src/agentstatemachine.cpp
   	src/scenarioreader.cpp
 	src/rng.cpp
+	src/xmlmanager.cpp
 
 	# elements
 	src/element/agent.cpp
@@ -114,7 +118,7 @@ add_executable(${EXECUTABLE_NAME} ${SOURCES} ${MOC_SRCS_UI})
 add_dependencies(${EXECUTABLE_NAME} ${catkin_EXPORTED_TARGETS})
 add_dependencies(${EXECUTABLE_NAME} ${PROJECT_NAME}_gencfg)
 target_link_libraries(${EXECUTABLE_NAME}
-  ${Qt5Widgets_LIBRARIES} ${BOOST_LIBRARIES} ${catkin_LIBRARIES}
+  ${Qt5Widgets_LIBRARIES} ${BOOST_LIBRARIES} ${catkin_LIBRARIES} ${Qt5Xml_LIBRARIES}
 )
 
 add_executable(simulate_diff_drive_robot src/simulate_diff_drive_robot.cpp)

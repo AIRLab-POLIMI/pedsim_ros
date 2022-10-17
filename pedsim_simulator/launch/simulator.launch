@@ -1,7 +1,9 @@
 <launch>
   <arg name="kbd_teleop" default="false"/>
   <arg name="rqt_teleop" default="false"/>
-  <arg name="scene_file" default="$(find pedsim_simulator)scenarios/scene.xml"/>
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenarios/scene.xml"/> -->
+  <arg name="scene_file"/>
+  <arg name="pedestrian_number"/>
   <arg name="default_queue_size" default="10"/>
   <arg name="max_robot_speed" default="1.5"/>
   <arg name="robot_mode" default="1"/>
@@ -17,6 +19,7 @@
   <!-- main simulator node -->
   <node name="pedsim_simulator" pkg="pedsim_simulator" type="pedsim_simulator" output="screen">
     <param name="scene_file" value="$(arg scene_file)" type="string"/>
+    <param name="pedestrian_number" value="$(arg pedestrian_number)" type="int"/>
     <param name="default_queue_size" value="$(arg default_queue_size)" type="int"/>
     <param name="max_robot_speed" value="$(arg max_robot_speed)" type="double"/>
     <param name="robot_mode" value="$(arg robot_mode)" type="int"/>
