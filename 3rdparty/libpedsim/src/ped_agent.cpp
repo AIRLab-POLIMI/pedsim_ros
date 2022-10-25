@@ -33,12 +33,12 @@ Ped::Tagent::Tagent() {
 
   // assign random maximal speed in m/s
   //normal_distribution<double> distribution(0.6, 0.2);
-  vmax = 1.6;
-  forceFactorDesired = 1.0;
-  forceFactorSocial = 2.1;
-  forceFactorObstacle = 10.0;
+  //vmax = 1.6;
+  forceFactorDesired = 10.0;
+  forceFactorSocial = 0.1;
+  forceFactorObstacle = 0.5;
   forceSigmaObstacle = 0.8;
-  forceSigmaRobot = 0.3*vmax/0.4;
+  //forceSigmaRobot = 0.3*vmax/0.4;
 
   agentRadius = 0.35;
   relaxationTime = 0.5;
@@ -282,8 +282,10 @@ void Ped::Tagent::move(double stepSizeIn) {
   still_time += stepSizeIn;
 
   // sum of all forces --> acceleration
-  a = forceFactorDesired * desiredforce + forceFactorSocial * socialforce 
-    + forceFactorObstacle * obstacleforce + myforce;
+  a = forceFactorDesired * desiredforce 
+    + forceFactorSocial * socialforce 
+    + forceFactorObstacle * obstacleforce 
+    + myforce;
 
   // Added by Ronja Gueldenring
   // add robot force, so that pedestrians avoid robot
