@@ -142,6 +142,7 @@ bool Ped::Tscene::removeWaypoint(Ped::Twaypoint* w) {
 /// \param   h This tells the simulation how far the agents should proceed.
 /// \see     Ped::Tagent::move(double h)
 void Ped::Tscene::moveAgents(double h) {
+  printf("2) Partita moveAgents()\n");  
   // first update states
   for (Tagent* agent : agents) agent->updateState();
 

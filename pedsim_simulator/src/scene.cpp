@@ -516,6 +516,7 @@ std::set<const Ped::Tagent*> Scene::getNeighbors(double x, double y,
 }
 
 void Scene::moveAllAgents() {
+  printf("1) Partita moveAllAgents()\n");
   // inform users when there is going to be the first update
   if (sceneTime == 0) emit aboutToStart();
 

@@ -279,6 +279,7 @@ void Ped::Tagent::computeForces() {
 /// \param   stepSizeIn This tells the simulation how far the agent should
 /// proceed
 void Ped::Tagent::move(double stepSizeIn) {
+  printf("3) Partita move()\n");
   still_time += stepSizeIn;
 
   // sum of all forces --> acceleration

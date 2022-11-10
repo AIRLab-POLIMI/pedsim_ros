@@ -169,6 +169,7 @@ void Simulator::runSimulation() {
     }
 
     if (!paused_) {
+      printf("0) simulation started\n");
       updateRobotPositionFromTF();
       SCENE.moveAllAgents();
 
@@ -309,7 +310,6 @@ void Simulator::publishAgents() {
   /*if (SCENE.getAgents().size() < 2) {
     return;
   }*/
-
   pedsim_msgs::AgentStates all_status;
   all_status.header = createMsgHeader();
 
@@ -332,6 +332,8 @@ void Simulator::publishAgents() {
     state.pose.position.z = a->getz();
     auto theta = std::atan2(a->getvy(), a->getvx());
     state.pose.orientation = pedsim::angleToQuaternion(theta);
+
+    printf("Agent id: %d, type: %d, x: %d, y: %d, z: %d\n", state.id, state.type, state.pose.position.x, state.pose.position.y, state.pose.position.z);
 
     state.twist.linear.x = a->getvx();
     state.twist.linear.y = a->getvy();
