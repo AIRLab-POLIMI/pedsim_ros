@@ -151,7 +151,7 @@ void AgentStateMachine::doStateTransition() {
 }
 
 void AgentStateMachine::activateState(AgentState stateIn) {
-  ROS_DEBUG("Agent %d activating state '%s' (time: %f)", agent->getId(),
+  ROS_ERROR("Agent %d activating state '%s' (time: %f)", agent->getId(),
             stateToName(stateIn).toStdString().c_str(), SCENE.getTime());
 
   // de-activate old state

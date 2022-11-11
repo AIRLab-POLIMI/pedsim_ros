@@ -319,7 +319,8 @@ QPointF Agent::getVisiblePosition() const { return QPointF(getx(), gety()); }
 void Agent::setVisiblePosition(const QPointF& positionIn) {
   // check and apply new position
   if (positionIn != getVisiblePosition())
-    setPosition(positionIn.x(), positionIn.y());
+    //setPosition(positionIn.x(), positionIn.y());
+    setPosition(0.0, 0.0);
 }
 
 QString Agent::toString() const {
