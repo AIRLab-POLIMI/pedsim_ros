@@ -169,18 +169,14 @@ void Simulator::runSimulation() {
     }
 
     if (!paused_) {
-      printf("0) simulation started\n");
       updateRobotPositionFromTF();
       SCENE.moveAllAgents();
-      for (Agent* agent : SCENE.getAgents()) {
-        printf("runSimulation() -> Agent id: %d, type: %d, x: %f, y: %f, z: %f\n", agent->getId(), agent->getType(), agent->getx(), agent->gety(), agent->getz());
-      }
+      
       publishAgents();
       publishGroups();
       publishRobotPosition();
       publishObstacles();
       publishWaypoints();
-      break;
     }
     ros::spinOnce();
     r.sleep();

@@ -280,30 +280,37 @@ void Ped::Tagent::computeForces() {
 /// proceed
 void Ped::Tagent::move(double stepSizeIn) {
   still_time += stepSizeIn;
-
+  printf("stepSizeIn: %f\n", stepSizeIn);
   // sum of all forces --> acceleration
   a = forceFactorDesired * desiredforce 
     + forceFactorSocial * socialforce 
     + forceFactorObstacle * obstacleforce 
     + myforce;
-
+  printf("acceleration w/o robot force: %f\n", a);
   // Added by Ronja Gueldenring
   // add robot force, so that pedestrians avoid robot
   if (this->getType() == ADULT_AVOID_ROBOT || this->getType() == ADULT_AVOID_ROBOT_REACTION_TIME){
       a = a + forceFactorSocial * robotforce;
   }
+  printf("acceleration with robot force: %f\n", a);
   // calculate the new velocity
   if (getTeleop() == false) {
     v = v + stepSizeIn * a;
   }
+  printf("velocity v: %f\n", v);
 
   // don't exceed maximal speed
   double speed = v.length();
-  if (speed > vmax) v = v.normalized() * vmax;
+  printf("speed %f", speed);
+  if (speed > vmax) {
+    v = v.normalized() * vmax;
+    printf("new normalized velocity: %f\n", v);
+  }
 
+  printf("position before update: x:%f y:%f z:%f\n", p);
   // internal position update = actual move
   p += stepSizeIn * v;
-    
+
 
   // notice scene of movement
   scene->moveAgent(this);

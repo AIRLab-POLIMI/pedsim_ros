@@ -62,15 +62,11 @@ QList<Agent*> AgentCluster::dissolve() {
 
     double randomizedX = position.x;
     double randomizedY = position.y;
-    ROS_WARN("Position X: %f ", position.x);
-    ROS_WARN("RandomizedX: %f ", randomizedX);
 
-
-    // handle dx=0 or dy=0 cases
+    // handle dx!=0 or dy!=0 cases
     if (distribution.width() != 0) randomizedX += randomX(RNG());
     if (distribution.height() != 0) randomizedY += randomY(RNG());
     a->setPosition(randomizedX, randomizedY);
-    ROS_WARN("After set RandomizedX: %f ", randomizedX);
     a->setType(agentType);
 
     // add waypoints to the agent
