@@ -144,12 +144,14 @@ Ped::Tvector Ped::Tagent::socialForce() const {
 
   Tvector force;
   for (const Ped::Tagent* other : neighbors) {
+    printf("@@@@@@ Agent id: %d, Neighbor id: %d @@@@@@\n", id, other->id);
     // don't compute social force to yourself
     if (other->id == id) continue;
 
     // compute difference between both agents' positions
     Tvector diff = other->p - p;
     Tvector diffDirection = diff.normalized();
+    printf("DiffDirection: %f %f %f\n", diffDirection.x, diffDirection.y, diffDirection.z);
     // compute difference between both agents' velocity vectors
     // Note: the agent-other-order changed here
     Tvector velDiff = v - other->v;
@@ -157,7 +159,17 @@ Ped::Tvector Ped::Tagent::socialForce() const {
     // compute interaction direction t_ij
     Tvector interactionVector = lambdaImportance * velDiff + diffDirection;
     double interactionLength = interactionVector.length();
-    Tvector interactionDirection = interactionVector / interactionLength;
+    printf("InteractionLength: %f\n", interactionLength);
+    Tvector interactionDirection;
+    if (interactionLength == 0) {
+      interactionDirection = interactionVector;
+      printf("InteractionDirection: %f %f %f\n", interactionDirection.x, interactionDirection.y, interactionDirection.z);
+    } else {
+      interactionDirection = interactionVector / interactionLength;
+      printf("InteractionDirection: %f %f %f\n", interactionDirection.x, interactionDirection.y, interactionDirection.z);
+    }
+    
+    
 
 
     // The robots influence is computed separetly in Ped::Tagent::robotForce()
@@ -168,18 +180,22 @@ Ped::Tvector Ped::Tagent::socialForce() const {
       Ped::Tangle theta = interactionDirection.angleTo(diffDirection);
       // compute model parameter B = gamma * ||D||
       double B = gamma * interactionLength;
-
+      //if (B == 0) B = 1;
       double thetaRad = theta.toRadian();
+      printf("theta radian: %f\n", thetaRad);
       double forceVelocityAmount =
           -exp(-diff.length() / B -
               (n_prime * B * thetaRad) * (n_prime * B * thetaRad));
+      printf("forceVelocityAmount: %f\n", forceVelocityAmount);
       double forceAngleAmount =
           -theta.sign() *
           exp(-diff.length() / B - (n * B * thetaRad) * (n * B * thetaRad));
-
+      printf("forceAngleAmount: %f\n", forceAngleAmount);
       Tvector forceVelocity = forceVelocityAmount * interactionDirection;
+      printf("forceVelocity: %f %f %f\n", forceVelocity.x, forceVelocity.y, forceVelocity.z);
       Tvector forceAngle =
           forceAngleAmount * interactionDirection.leftNormalVector();
+      printf("forceAngle: %f %f %f\n -----------\n", forceAngle.x, forceAngle.y, forceAngle.z);
       force += forceVelocity + forceAngle;
 
     }
@@ -280,19 +296,23 @@ void Ped::Tagent::computeForces() {
 /// proceed
 void Ped::Tagent::move(double stepSizeIn) {
   still_time += stepSizeIn;
-  printf("stepSizeIn: %f\n", stepSizeIn);
+  printf("---------- Agent id: %d ----------\n", id);
+  printf("Desired force: x: %f y: %f z: %f\n", desiredforce.x, desiredforce.y, desiredforce.z);
+  printf("Social force: x: %f y: %f z: %f\n", socialforce.x, socialforce.y, socialforce.z);
+  printf("Obstacle force: x: %f y: %f z: %f\n", obstacleforce.x, obstacleforce.y, obstacleforce.z);
+  printf("My force: x: %f y: %f z: %f\n", myforce.x, myforce.y, myforce.z);
   // sum of all forces --> acceleration
   a = forceFactorDesired * desiredforce 
     + forceFactorSocial * socialforce 
     + forceFactorObstacle * obstacleforce 
     + myforce;
-  printf("acceleration w/o robot force: %f\n", a);
+  printf("acceleration w/o robot force. x: %f y: %f z: %f\n", a.x, a.y, a.z);
   // Added by Ronja Gueldenring
   // add robot force, so that pedestrians avoid robot
   if (this->getType() == ADULT_AVOID_ROBOT || this->getType() == ADULT_AVOID_ROBOT_REACTION_TIME){
       a = a + forceFactorSocial * robotforce;
   }
-  printf("acceleration with robot force: %f\n", a);
+  printf("acceleration with robot force. x: %f y: %f z: %f\n", a.x, a.y, a.z);
   // calculate the new velocity
   if (getTeleop() == false) {
     v = v + stepSizeIn * a;
@@ -301,15 +321,16 @@ void Ped::Tagent::move(double stepSizeIn) {
 
   // don't exceed maximal speed
   double speed = v.length();
-  printf("speed %f", speed);
+  printf("speed: %f\n", speed);
   if (speed > vmax) {
     v = v.normalized() * vmax;
-    printf("new normalized velocity: %f\n", v);
+    printf("new normalized velocity: x: %f y: %f z: %f\n", v.x, v.y, v.z);
   }
 
-  printf("position before update: x:%f y:%f z:%f\n", p);
+  printf("position before update: x: %f y: %f z: %f\n", p.x, p.y, p.z);
   // internal position update = actual move
   p += stepSizeIn * v;
+  printf("position after update: x: %f y: %f z: %f\n", p.x, p.y, p.z);
 
 
   // notice scene of movement
