@@ -180,17 +180,27 @@ Ped::Tvector Ped::Tagent::socialForce() const {
       Ped::Tangle theta = interactionDirection.angleTo(diffDirection);
       // compute model parameter B = gamma * ||D||
       double B = gamma * interactionLength;
-      //if (B == 0) B = 1;
+      
       double thetaRad = theta.toRadian();
       printf("theta radian: %f\n", thetaRad);
-      double forceVelocityAmount =
+
+      double forceVelocityAmount;
+      double forceAngleAmount;
+      
+      if (diff.length() == 0 && B == 0) {
+        forceVelocityAmount = -1.0;
+        forceAngleAmount = -1.0;
+      } else {
+        forceVelocityAmount =
           -exp(-diff.length() / B -
               (n_prime * B * thetaRad) * (n_prime * B * thetaRad));
-      printf("forceVelocityAmount: %f\n", forceVelocityAmount);
-      double forceAngleAmount =
+        printf("forceVelocityAmount: %f\n", forceVelocityAmount);
+        forceAngleAmount =
           -theta.sign() *
           exp(-diff.length() / B - (n * B * thetaRad) * (n * B * thetaRad));
-      printf("forceAngleAmount: %f\n", forceAngleAmount);
+        printf("forceAngleAmount: %f\n", forceAngleAmount);
+      }
+      
       Tvector forceVelocity = forceVelocityAmount * interactionDirection;
       printf("forceVelocity: %f %f %f\n", forceVelocity.x, forceVelocity.y, forceVelocity.z);
       Tvector forceAngle =
