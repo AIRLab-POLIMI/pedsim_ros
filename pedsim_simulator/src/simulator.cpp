@@ -337,7 +337,7 @@ void Simulator::publishAgents() {
     auto theta = std::atan2(a->getvy(), a->getvx());
     state.pose.orientation = pedsim::angleToQuaternion(theta);
 
-    printf("publishAgents() -> Agent id: %d, type: %d, x: %f, y: %f, z: %f\n", state.id, state.type, state.pose.position.x, state.pose.position.y, state.pose.position.z);
+    //printf("publishAgents() -> Agent id: %d, type: %d, x: %f, y: %f, z: %f\n", state.id, state.type, state.pose.position.x, state.pose.position.y, state.pose.position.z);
 
     state.twist.linear.x = a->getvx();
     state.twist.linear.y = a->getvy();
