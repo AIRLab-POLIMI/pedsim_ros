@@ -33,12 +33,12 @@ Ped::Tagent::Tagent() {
 
   // assign random maximal speed in m/s
   //normal_distribution<double> distribution(0.6, 0.2);
-  //vmax = 1.6;
+  vmax = 1.0;
   forceFactorDesired = 10.0;
   forceFactorSocial = 0.1;
   forceFactorObstacle = 0.7;
   forceSigmaObstacle = 0.8;
-  //forceSigmaRobot = 0.3*vmax/0.4;
+  forceSigmaRobot = 0.3*vmax/0.4;
 
   agentRadius = 0.25;
   relaxationTime = 0.5;
@@ -160,17 +160,7 @@ Ped::Tvector Ped::Tagent::socialForce() const {
     Tvector interactionVector = lambdaImportance * velDiff + diffDirection;
     double interactionLength = interactionVector.length();
     // printf("InteractionLength: %f\n", interactionLength);
-    Tvector interactionDirection;
-    if (interactionLength == 0) {
-      interactionDirection = interactionVector;
-      // printf("InteractionDirection: %f %f %f\n", interactionDirection.x, interactionDirection.y, interactionDirection.z);
-    } else {
-      interactionDirection = interactionVector / interactionLength;
-      // printf("InteractionDirection: %f %f %f\n", interactionDirection.x, interactionDirection.y, interactionDirection.z);
-    }
-    
-    
-
+    Tvector interactionDirection = interactionVector / interactionLength; 
 
     // The robots influence is computed separetly in Ped::Tagent::robotForce()
     if(other->getType() == ROBOT){
@@ -183,23 +173,11 @@ Ped::Tvector Ped::Tagent::socialForce() const {
       
       double thetaRad = theta.toRadian();
       // printf("theta radian: %f\n", thetaRad);
-
-      double forceVelocityAmount;
-      double forceAngleAmount;
       
-      if (diff.length() == 0 && B == 0) {
-        forceVelocityAmount = -1.0;
-        forceAngleAmount = -1.0;
-      } else {
-        forceVelocityAmount =
-          -exp(-diff.length() / B -
-              (n_prime * B * thetaRad) * (n_prime * B * thetaRad));
-        // printf("forceVelocityAmount: %f\n", forceVelocityAmount);
-        forceAngleAmount =
-          -theta.sign() *
-          exp(-diff.length() / B - (n * B * thetaRad) * (n * B * thetaRad));
-        // printf("forceAngleAmount: %f\n", forceAngleAmount);
-      }
+      double forceVelocityAmount = -exp(-diff.length() / B - (n_prime * B * thetaRad) * (n_prime * B * thetaRad));
+      // printf("forceVelocityAmount: %f\n", forceVelocityAmount);
+      double forceAngleAmount = -theta.sign() * exp(-diff.length() / B - (n * B * thetaRad) * (n * B * thetaRad));
+      // printf("forceAngleAmount: %f\n", forceAngleAmount);
       
       Tvector forceVelocity = forceVelocityAmount * interactionDirection;
       // printf("forceVelocity: %f %f %f\n", forceVelocity.x, forceVelocity.y, forceVelocity.z);
