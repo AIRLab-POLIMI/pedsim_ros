@@ -284,42 +284,42 @@ void Ped::Tagent::computeForces() {
 /// proceed
 void Ped::Tagent::move(double stepSizeIn) {
   still_time += stepSizeIn;
-  printf("---------- Agent id: %d ----------\n", id);
-  printf("Desired force: x: %f y: %f z: %f\n", desiredforce.x, desiredforce.y, desiredforce.z);
-  printf("Social force: x: %f y: %f z: %f\n", socialforce.x, socialforce.y, socialforce.z);
-  printf("Obstacle force: x: %f y: %f z: %f\n", obstacleforce.x, obstacleforce.y, obstacleforce.z);
-  printf("My force: x: %f y: %f z: %f\n", myforce.x, myforce.y, myforce.z);
+  // printf("---------- Agent id: %d ----------\n", id);
+  // printf("Desired force: x: %f y: %f z: %f\n", desiredforce.x, desiredforce.y, desiredforce.z);
+  // printf("Social force: x: %f y: %f z: %f\n", socialforce.x, socialforce.y, socialforce.z);
+  // printf("Obstacle force: x: %f y: %f z: %f\n", obstacleforce.x, obstacleforce.y, obstacleforce.z);
+  // printf("My force: x: %f y: %f z: %f\n", myforce.x, myforce.y, myforce.z);
   // sum of all forces --> acceleration
   a = forceFactorDesired * desiredforce 
     + forceFactorSocial * socialforce 
     + forceFactorObstacle * obstacleforce 
     + myforce;
-  printf("acceleration w/o robot force. x: %f y: %f z: %f\n", a.x, a.y, a.z);
+  // printf("acceleration w/o robot force. x: %f y: %f z: %f\n", a.x, a.y, a.z);
   // Added by Ronja Gueldenring
   // add robot force, so that pedestrians avoid robot
   if (this->getType() == ADULT_AVOID_ROBOT || this->getType() == ADULT_AVOID_ROBOT_REACTION_TIME){
-      printf("Robot force. x: %f y: %f z: %f\n", robotforce.x, robotforce.y, robotforce.z);
+      // printf("Robot force. x: %f y: %f z: %f\n", robotforce.x, robotforce.y, robotforce.z);
       a = a + forceFactorSocial * robotforce;
   }
-  printf("acceleration with robot force. x: %f y: %f z: %f\n", a.x, a.y, a.z);
+  // printf("acceleration with robot force. x: %f y: %f z: %f\n", a.x, a.y, a.z);
   // calculate the new velocity
   if (getTeleop() == false) {
     v = v + stepSizeIn * a;
   }
-  printf("velocity v: %f %f %f\n", v.x, v.y, v.z);
+  // printf("velocity v: %f %f %f\n", v.x, v.y, v.z);
 
   // don't exceed maximal speed
   double speed = v.length();
-  printf("speed: %f\n", speed);
+  // printf("speed: %f\n", speed);
   if (speed > vmax) {
     v = v.normalized() * vmax;
-    printf("new normalized velocity: x: %f y: %f z: %f\n", v.x, v.y, v.z);
+    // printf("new normalized velocity: x: %f y: %f z: %f\n", v.x, v.y, v.z);
   }
 
-  printf("position before update: x: %f y: %f z: %f\n", p.x, p.y, p.z);
+  // printf("position before update: x: %f y: %f z: %f\n", p.x, p.y, p.z);
   // internal position update = actual move
   p += stepSizeIn * v;
-  printf("position after update: x: %f y: %f z: %f\n", p.x, p.y, p.z);
+  // printf("position after update: x: %f y: %f z: %f\n", p.x, p.y, p.z);
 
 
   // notice scene of movement

@@ -130,7 +130,7 @@ bool Simulator::initializeSimulation() {
   nh_.param<double>("max_robot_speed", CONFIG.max_robot_speed, 1.5);
   nh_.param<double>("update_rate", CONFIG.updateRate, 25.0);
   nh_.param<double>("simulation_factor", CONFIG.simulationFactor, 1.0);
-  nh_.param<double>("pedestrian_max_vel", CONFIG.pedestrian_max_vel, 0.0);
+  nh_.param<double>("pedestrian_max_vel", CONFIG.pedestrian_max_vel, 1.0);
 
   int op_mode = 1;
   nh_.param<int>("robot_mode", op_mode, 1);
@@ -139,7 +139,7 @@ bool Simulator::initializeSimulation() {
   double spawn_period;
   nh_.param<double>("spawn_period", spawn_period, 5.0);
   //TODO togliere i default e aggiungere parametri ros per frame_id e robot_base_frame_id, se non viene passato fai lanciare eccezione
-  nh_.param<std::string>("frame_id", frame_id_, "odom");
+  nh_.param<std::string>("frame_id", frame_id_, "map");
   nh_.param<std::string>("robot_base_frame_id", robot_base_frame_id_,
       "base_footprint");
 
