@@ -36,7 +36,7 @@ Ped::Tagent::Tagent() {
   vmax = 1.0;
   forceFactorDesired = 10.0;
   forceFactorSocial = 0.1;
-  forceFactorObstacle = 0.7;
+  forceFactorObstacle = 5.0;
   forceSigmaObstacle = 0.8;
   forceSigmaRobot = 0.3*vmax/0.4;
 
