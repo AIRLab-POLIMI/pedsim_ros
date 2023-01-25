@@ -139,7 +139,7 @@ void ScenarioReader::processData() {
       const int type = elementAttributes.value("type").toString().toInt();
       AgentCluster* agentCluster = new AgentCluster(x, y, n);
       agentCluster->setDistribution(dx, dy);
-      ROS_ERROR("Agent x: %f, y: %f, n: %d, dx: %f, dy: %f, type: %d\n", x, y, n, dx, dy, type);
+      ROS_DEBUG("Agent type: %d, x: %f, y: %f, n: %d, dx: %f, dy: %f, \n", type, x, y, n, dx, dy);
       /// TODO - change agents Vmax distribution based on agent type
       /// and other force parameters to realize different behaviours
       agentCluster->setType(static_cast<Ped::Tagent::AgentType>(type));
