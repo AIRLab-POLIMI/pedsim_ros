@@ -164,7 +164,7 @@ void Simulator::runSimulation() {
               poseFrom2DVelocity(robot_->getvx(), robot_->getvy());
         } else {
           // add a random negative number to the velocity max parameter, so that each agent has a unique different vmax
-          std::uniform_real_distribution<double> randomV(-CONFIG.pedestrian_max_vel / 2, 0);
+          std::uniform_real_distribution<double> randomV(-CONFIG.pedestrian_max_vel / 5, 0);
           double vmax = CONFIG.pedestrian_max_vel + randomV(RNG());
           //ROS_ERROR_STREAM("Agent id: " << agent->getId() << " randomV:" << randomV(RNG()) << " vmax: " << vmax);
           agent->setVmax(vmax);
