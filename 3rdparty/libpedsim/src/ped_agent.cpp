@@ -34,9 +34,9 @@ Ped::Tagent::Tagent() {
   // assign random maximal speed in m/s
   //normal_distribution<double> distribution(0.6, 0.2);
   vmax = 1.0;
-  forceFactorDesired = 10.0;
-  forceFactorSocial = 0.1;
-  forceFactorObstacle = 5.0;
+  forceFactorDesired = 1.0;
+  forceFactorSocial = 2.1;
+  forceFactorObstacle = 10.0;
   forceSigmaObstacle = 0.8;
   forceSigmaRobot = 0.3*vmax/0.4;
 
@@ -272,7 +272,7 @@ void Ped::Tagent::computeForces() {
   if (forceFactorSocial > 0) socialforce = socialForce();
   if (forceFactorObstacle > 0) obstacleforce = obstacleForce();
   robotforce = robotForce();
-  myforce = myForce(desiredDirection);
+  // myforce = myForce(desiredDirection);
 }
 
 /// Does the agent dynamics stuff. Calls the methods to calculate the individual
